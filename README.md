@@ -1,6 +1,8 @@
 # Measurement of Concrete Spall Depth and Area Using a Single RGB-D Image Captured from Arbitrary Perspectives
 The paper is currently under review. This repository provides Spall to Full for semantics-guided depth completion and MATLAB tools for single-view RGB-D quantification of concrete spalling area and depth on planar and curved surfaces.
 
+Regarding the measurement of concrete spalling in complex scenarios such as corresponding fires, please refer to the website “https://github.com/MikeyDong/Spall-to-Full”。
+
 # RGB-D Spalling Measurement
 
 MATLAB tools for measuring concrete spalling area and depth from a registered RGB-D frame using planar or curved reference surfaces.
