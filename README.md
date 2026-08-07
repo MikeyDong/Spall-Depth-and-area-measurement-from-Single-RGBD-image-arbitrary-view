@@ -3,67 +3,67 @@ The paper is currently under review. This repository provides Spall to Full for 
 
 # RGB-D Spalling Measurement
 
-This folder contains the MATLAB implementation used to measure concrete spalling geometry from a single registered RGB-D frame. Separate tools are provided for planar and curved reference surfaces.
+MATLAB tools for measuring concrete spalling area and depth from a registered RGB-D frame using planar or curved reference surfaces.
 
 ## Files
 
 | File | Purpose |
 | --- | --- |
-| `measure_spalling_area_planar.m` | Spalling-area measurement using an intact planar reference surface. |
-| `measure_spalling_area_curved.m` | Spalling-area measurement using a locally fitted quadratic reference surface. |
-| `measure_spalling_depth_planar.m` | Point-wise spalling-depth measurement relative to a RANSAC-fitted reference plane. |
-| `measure_spalling_depth_curved.m` | Point-wise spalling-depth measurement relative to a locally fitted quadratic reference surface. |
+| `run_measurement.m` | Entry script for setting input paths and selecting a measurement tool. |
+| `visualize_valid_depth.m` | Preview valid-depth coverage before selecting reference regions. |
+| `measure_spalling_area_planar.m` | Spalling-area measurement with a planar reference surface. |
+| `measure_spalling_area_curved.m` | Spalling-area measurement with a quadratic reference surface. |
+| `measure_spalling_depth_planar.m` | Point-wise spalling-depth measurement with a planar reference surface. |
+| `measure_spalling_depth_curved.m` | Point-wise spalling-depth measurement with a quadratic reference surface. |
 
 ## Requirements
 
-- MATLAB R2025a (original implementation environment).
-- Image Processing Toolbox is required for interactive ROIs and image processing.
-- Computer Vision Toolbox is additionally required by `measure_spalling_depth_planar.m` (`pointCloud` and `pcfitplane`).
+- MATLAB R2025a.
+- Image Processing Toolbox.
+- Computer Vision Toolbox for `measure_spalling_depth_planar.m` (`pointCloud` and `pcfitplane`).
 
-## Inputs
+## Usage
 
-Each function takes three paths:
-
-1. `rgb_path`: RGB image.
-2. `depth_path`: depth image registered to the RGB image. Depth values are expected in millimetres.
-3. `intrinsics_path`: Azure Kinect calibration text file containing the color-camera intrinsics and Rational 6KT distortion coefficients (`fx`, `fy`, `cx`, `cy`, `k1`-`k6`, `p1`, and `p2`).
-
-The RGB and depth images should describe the same frame. If their image sizes differ, the depth image is resized to the RGB resolution using nearest-neighbour interpolation.
-
-## Quick start
+Set the RGB, aligned depth, and calibration paths in `run_measurement.m`:
 
 ```matlab
-rgb_path = "path/to/rgb.png";
-depth_path = "path/to/depth.png";
-intrinsics_path = "path/to/calibration.txt";
-
-% Choose one measurement tool:
-measure_spalling_area_planar(rgb_path, depth_path, intrinsics_path);
-measure_spalling_area_curved(rgb_path, depth_path, intrinsics_path);
-measure_spalling_depth_planar(rgb_path, depth_path, intrinsics_path);
-measure_spalling_depth_curved(rgb_path, depth_path, intrinsics_path);
+rgb_path = "path/to/rgb_image.png";
+depth_path = "path/to/depth_image.png";
+intrinsics_path = "path/to/intrinsics.txt";
 ```
 
-Run only the function corresponding to the surface geometry and quantity being measured.
+Keep one measurement call active and run `run_measurement.m`. The script first calls `visualize_valid_depth.m` automatically. Blue pixels indicate valid depth after distortion correction (`alpha = 0.65`), while unshaded pixels indicate missing or invalid depth. Inspect the coverage, click **OK** to continue, and use the preview to help select intact reference regions with dense valid-depth coverage.
 
 ## Interaction
 
-### Area measurement
+### Planar and curved area measurement
 
-1. Draw one or more intact reference regions. Double-click to close each polygon and finish the current ROI.
-2. Finish reference selection when prompted.
-3. Click **Measure spalling area**, draw the spalling ROI, and repeat if multiple spalled regions are present.
-4. The total surface area is reported in `cm^2`.
+1. Click **1. Define intact reference**, draw an intact polygon, and double-click to finish it. Use **Add** to select another reference region or **Done** to fit the reference surface.
+2. Click **2. Measure spalling area**, draw the spalling region, and double-click to finish the polygon. Use **Continue** for another spalling region or **Finish** to complete the measurement.
+3. Individual and total spalling areas are reported in cm². **Clear annotations** can be used to remove displayed annotations.
 
-### Depth measurement
+### Planar depth measurement
 
-1. Draw intact regions used to reconstruct the reference plane or curved surface.
-2. In the point-measurement window, left-click the spalling locations to measure.
-3. Press `z` for zoom mode, `p` for pan mode, and `Esc` or `Enter` to finish.
-4. Point-wise depths are reported in millimetres. The curved-surface tool also displays 2D and 3D result views.
+1. Draw an intact reference polygon and double-click to finish it. Use **Continue** to add another reference region or **Finish** to reconstruct the reference plane.
+2. Left-click a spalling location to measure its depth.
+3. Press `z` for zoom mode (left-click to zoom in, right-click to zoom out), then press any key to return to point measurement. Press `p` for pan mode, drag to pan, then press any key to return.
+4. Press `Esc` or `Enter` to finish. Depth is reported in mm.
+
+### Curved depth measurement
+
+1. Draw an intact reference polygon and double-click to finish it. Press `Space` to add another reference region, or `Esc`/`Enter` to finish reference selection and reconstruct the quadratic surface.
+2. Left-click a spalling location to measure its depth.
+3. Press `z` for zoom mode (left-click to zoom in, right-click to zoom out), then press any key to return to point measurement. Press `p` for pan mode, drag to pan, then press any key to return.
+4. Press `Esc` or `Enter` to finish. Depth is reported in mm.
 
 ## Notes
 
-- The code internally applies the Rational 6KT distortion correction before geometric reconstruction.
-- Invalid or missing depth values should be encoded as zero (or values below 10 mm); these pixels are excluded or filled according to the measurement workflow.
-- The supplied depth should already be aligned to the RGB camera coordinate system.
+- RGB and depth images must represent the same frame; depth must be registered to the RGB image and expressed in millimetres.
+- The calibration file must contain the color-camera intrinsics and Rational 6KT distortion parameters (`fx`, `fy`, `cx`, `cy`, `k1`-`k6`, `p1`, `p2`). Distortion correction is applied internally.
+- Keep `run_measurement.m`, `visualize_valid_depth.m`, and the four measurement functions in the same folder or on the MATLAB path.
+- When possible, use at least two intact reference regions. Prefer regions close to the measurement target and with dense valid-depth coverage; avoid areas dominated by missing depth.
+- The valid-depth preview is only a selection aid and does not modify the RGB or depth inputs used by the measurement functions.
+
+## Disclaimer
+
+Measurement accuracy can be affected by depth noise or missing depth, RGB-depth registration and camera calibration errors, viewing distance and angle, surface condition, reference-region placement, and manual ROI or point selection. Results should therefore be checked against the available depth coverage and the requirements of the intended application.
