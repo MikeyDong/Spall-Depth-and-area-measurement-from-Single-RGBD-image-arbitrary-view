@@ -40,7 +40,7 @@ Keep one measurement call active and run `run_measurement.m`. The script first c
 
 1. Click **1. Define intact reference**, draw an intact polygon, and double-click to finish it. Use **Add** to select another reference region or **Done** to fit the reference surface.
 2. Click **2. Measure spalling area**, draw the spalling region, and double-click to finish the polygon. Use **Continue** for another spalling region or **Finish** to complete the measurement.
-3. Individual and total spalling areas are reported in cm². **Clear annotations** can be used to remove displayed annotations.
+3. Individual and total spalling areas are reported in cm². 
 
 ### Planar depth measurement
 
