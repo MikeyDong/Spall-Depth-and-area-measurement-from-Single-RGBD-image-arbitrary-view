@@ -2,6 +2,7 @@
 The paper is currently under review. This repository provides Spall to Full for semantics-guided depth completion and MATLAB tools for single-view RGB-D quantification of concrete spalling area and depth on planar and curved surfaces.
 
 Regarding the measurement of concrete spalling in complex scenarios such as corresponding fires, please refer to the website “https://github.com/MikeyDong/Spall-to-Full”。
+Example image pairs and camera intrinsics can be found in "https://pan.baidu.com/s/1COh_mkfl5J9YiL_gJHz1eA" with extraction code: gs9t. 
 
 # RGB-D Spalling Measurement
 
