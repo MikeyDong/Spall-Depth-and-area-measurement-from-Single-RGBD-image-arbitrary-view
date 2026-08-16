@@ -3,7 +3,8 @@ The paper is currently under review. This repository provides Spall to Full for 
 
 Regarding the measurement of concrete spalling in complex scenarios such as corresponding fires, please refer to the website “https://github.com/MikeyDong/Spall-to-Full”。
 
-Example image pairs and camera intrinsics can be found in "https://pan.baidu.com/s/1COh_mkfl5J9YiL_gJHz1eA" with extraction code: gs9t. 
+The same example image pairs and camera intrinsics are available from [Baidu Netdisk](https://pan.baidu.com/s/1COh_mkfl5J9YiL_gJHz1eA) (extraction code: `gs9t`) and [Zenodo](https://zenodo.org/records/21960638); both archives contain identical files.
+
 
 # RGB-D Spalling Measurement
 
